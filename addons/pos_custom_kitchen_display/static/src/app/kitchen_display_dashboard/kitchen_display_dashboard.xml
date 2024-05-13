@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="kitchenDisplayDashboard">
+        <header>
+            <div id="kitchen_dashboard" class="kitchen">
+                <div class="body_wrapper">
+                    <div class="container">
+                        <div class="top_bar">
+                            <ul>
+                                <li>
+                                    <span t-on-click="(e) => this.set_state(e,'draft')">
+                                        Waiting
+                                    </span>
+                                </li>
+                                <li>
+                                    <span t-on-click="(e) => this.set_state(e,'accepted')">
+                                        Accepted
+                                    </span>
+                                </li>
+                                <li>
+                                    <span t-on-click="(e) => this.set_state(e,'ready')">
+                                        Ready
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- <kanban> -->
+        <div >
+                <t t-if="state.tickets != []">
+                    <ul>
+                    <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
+                        <li>
+                            <t t-esc="ticket.id"/>
+                        </li>
+                    </t>
+                    </ul>
+                </t>
+        </div>
+        <!-- </kanban> -->
+    </t>
+</templates>

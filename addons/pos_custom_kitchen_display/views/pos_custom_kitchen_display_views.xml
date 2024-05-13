@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- action for kitchen display-->
+    <record id="kitchen_display_action" model="ir.actions.act_window">
+        <field name="name">Kitchen Display</field>
+        <field name="res_model">kitchen.display</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="kitchen_ticket_action" model="ir.actions.act_window">
+        <field name="name">Kitchen Ticket</field>
+        <field name="res_model">kitchen.ticket</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="kitchen_ticket_line_action" model="ir.actions.act_window">
+        <field name="name">Kitchen Ticket Line</field>
+        <field name="res_model">kitchen.ticket.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="kitchen_display_dashboard_action" model="ir.actions.client">
+        <field name="name">Kitchen Display Dashboard</field>
+        <field name="tag">kitchen_display_dashboard</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <record id="kitchen_display_view_tree" model="ir.ui.view">
+        <field name="name">kitchen.display.view.tree</field>
+        <field name="model">kitchen.display</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id"/>
+                <field name="pos_id"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="kitchen_ticket_view_tree" model="ir.ui.view">
+        <field name="name">kitchen.ticket.view.tree</field>
+        <field name="model">kitchen.ticket</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="table"/>
+                <field name='create_time'/>
+                <field name="ticket_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kitchen_ticket_line_view_tree" model="ir.ui.view">
+        <field name="name">kitchen.ticket.line.view.tree</field>
+        <field name="model">kitchen.ticket.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="product_id"/>
+                <field name='name'/>
+                <field name="qty"/>
+                <field name="note"/>
+                <field name="line_status"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="kitchen_display_view_form" model="ir.ui.view">
+        <field name="name">kitchen.display.view.form</field>
+        <field name="model">kitchen.display</field>
+        <field name="arch" type="xml">
+            <form class="kitchen_form_view">
+                <sheet>
+                    <div class="row mt16 o_settings_container"
+                         name="auto_approval">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             id="pos_config_id">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="pos_id"/>
+                                <div class="text-muted">
+                                    <div>
+                                        <field name="pos_id"/>
+                                    </div>
+                                    This will be the Allowed POS for this pos
+                                    Kitchen
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             id="kitchen_display">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                    <div>
+                                        <button string="Kitchen Display"
+                                                class="btn-primary" 
+                                                name="%(kitchen_display_dashboard_action)d"
+                                                type="action"
+                                                help="Got To the Kitchen Screen"/>
+                                        <br/>
+                                        <br/>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

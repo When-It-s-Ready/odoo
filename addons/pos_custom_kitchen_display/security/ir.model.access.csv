@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+pos_custom_kitchen_display.access_kitchen_ticket,access_kitchen_ticket,pos_custom_kitchen_display.model_kitchen_ticket,base.group_user,1,1,1,1
+pos_custom_kitchen_display.access_kitchen_ticket_line,access_kitchen_ticket_line,pos_custom_kitchen_display.model_kitchen_ticket_line,base.group_user,1,1,1,1
+pos_custom_kitchen_display.access_kitchen_display,access_kitchen_display,pos_custom_kitchen_display.model_kitchen_display,base.group_user,1,1,1,1
