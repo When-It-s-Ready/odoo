@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="kitchen_display.Wrapper">
+        <div class="d-flex flex-column">
+            <Navbar />
+            <div class="flex-grow-1 overflow-auto bg-200">
+                <t t-component="disp.mainScreen.component" t-props="disp.mainScreen.props"/>
+            </div>
+        </div>
+        <MainComponentsContainer/>
+    </t>
+
+</templates>

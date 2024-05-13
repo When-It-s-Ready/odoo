@@ -15,9 +15,12 @@
         
     ],
     'assets': {
-        'web.assets_backend': [
-            'pos_custom_kitchen_display/static/src/app/kitchen_display_dashboard/kitchen_display_dashboard.js',
-            'pos_custom_kitchen_display/static/src/app/kitchen_display_dashboard/kitchen_display_dashboard.xml',
+        'kitchen_display.assets': [
+            # get all assets that point of sale uses without the actual pos files
+            ('include', 'point_of_sale._assets_pos'),
+            ('remove', 'point_of_sale/static/src/**/*'),
+            # add the kitchen display files
+            'pos_custom_kitchen_display/static/src/app/**/*'
         ],
     },
     'images': [

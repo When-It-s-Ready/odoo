@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Component, useState } from  "@odoo/owl";
+import { Component, useState, mount } from  "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 class KitchenDisplayDashboard extends Component {
