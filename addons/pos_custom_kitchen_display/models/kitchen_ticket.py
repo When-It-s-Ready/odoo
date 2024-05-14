@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
+from odoo.tools import date_utils
+import json
+
 
 class KitchenTicket(models.Model):
     _name = "kitchen.ticket"
@@ -15,6 +18,7 @@ class KitchenTicket(models.Model):
                                     help='To know the status of the ticket', default = 'pending')
     lines = fields.One2many("kitchen.ticket.line", "ticket_id", string = "Ticket lines")
     table = fields.Many2one("restaurant.table", string="Table")
+    # TODO not needed as well create_date exists 
     create_time = fields.Datetime('Creation date', required=True, readonly=False,
                                   default=lambda self: fields.datetime.now())
     # TODO delete this
@@ -35,11 +39,22 @@ class KitchenTicket(models.Model):
             if self.check_all_lines_done():
                 self.ticket_status = 'done'
     
-    def sendIfActive(self):
-        self.env.
-    
-    
 
+    def sendIfActive(self):
+        actives = self.env['kitchen.display'].search_count([('active','=','true')])
+        if actives != 0:
+            rdata =  self.read()[0]
+            rdata['lines'] = []
+        
+            for line in self.lines:
+                dline = line.read()[0]
+                rdata["lines"].append(dline)
+
+        
+            json_data = json.dumps(rdata, default=date_utils.json_default)
+            self.env['bus.bus']._sendone("kitchen_display_channel","new_ticket", {"data": json_data})
+
+    
 
 class KitchenTicketLine(models.Model):
     _name = "kitchen.ticket.line"

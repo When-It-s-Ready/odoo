@@ -12,15 +12,28 @@
         "security/ir.model.access.csv",
         "views/pos_custom_kitchen_display_views.xml",
         "views/pos_custom_kitchen_display_menus.xml",
-        
+        "views/templates.xml"
     ],
     'assets': {
-        'kitchen_display.assets': [
-            # get all assets that point of sale uses without the actual pos files
-            ('include', 'point_of_sale._assets_pos'),
-            ('remove', 'point_of_sale/static/src/**/*'),
+        'pos_custom_kitchen_display.assets_display': [
+            # bootstrap
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            ('include', 'web._assets_bootstrap_backend'),
+
+            # required for fa icons
+            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            
+            # include base files from framework
+            ('include', 'web._assets_core'),
+
+            'web/static/src/core/utils/functions.js',
+            'web/static/src/core/browser/browser.js',
+            'web/static/src/core/registry.js',
+            'web/static/src/core/assets.js',
             # add the kitchen display files
-            'pos_custom_kitchen_display/static/src/app/**/*'
+            'pos_custom_kitchen_display/static/src/**/*'
         ],
     },
     'images': [

@@ -3,6 +3,7 @@ import { markRaw, reactive } from "@odoo/owl";
 import { roundPrecision as round_pr, floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { Reactive } from "@web/core/utils/reactive";
+import { useBus } from "@web/core/utils/hooks";
 import { memoize } from "@web/core/utils/functions";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { renderToString } from "@web/core/utils/render";
@@ -15,7 +16,8 @@ export class KitchenDisplay extends Reactive{
     
     static serviceDependencies = [
         "orm",
-        "ui"
+        "ui",
+        "bus_service"
     ];
 
     constructor() {

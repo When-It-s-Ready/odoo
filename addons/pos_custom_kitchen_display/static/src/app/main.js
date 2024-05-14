@@ -1,33 +1,41 @@
 /** @odoo-module */
 
+import { browser } from "@web/core/browser/browser";
+import { mount, whenReady } from "@odoo/owl";
+import { KitchenDisplayWrapper } from "./kd_wrapper";
 import { templates } from "@web/core/assets";
-import { App, whenReady } from "@odoo/owl";
-import { makeEnv, startServices } from "@web/env";
-import { session } from "@web/session";
-import { KitchenDisplayWrapper } from "@pos_custom_kitchen_display/app/kd_app";
 
-(async function startKitchenDisplay() {
-    odoo.info = {
-        db: session.db,
-    };
+// Mount the Playground component when the document.body is ready
+whenReady( () => {
+    mount(KitchenDisplayWrapper, document.body, { templates, dev: true, name: "Kitchen Display Wrapper" });
+});
 
-    const env = makeEnv();
-    await startServices(env);
 
-    await whenReady();
-    const app = new App(KitchenDisplayWrapper, {
-        name: "Kitchen Display",
-        env,
-        templates,
-    });
 
-    const root = await app.mount(document.body);
-    const classList = document.body.classList;
-    if (env.services.user.userId === 1) {
-        classList.add("o_is_superuser");
+/**
+ * This code is iterating over the cause property of an error object to console.error a string
+ * containing the stack trace of the error and any errors that caused it.
+ * @param {Event} ev
+ */
+function logError(ev) {
+    ev.preventDefault();
+    let error = ev ?.error || ev.reason;
+
+    if (error.seen) {
+        // If an error causes the mount to crash, Owl will reject the mount promise and throw the
+        // error. Therefore, this if statement prevents the same error from appearing twice.
+        return;
     }
-    if (env.debug) {
-        classList.add("o_debug");
-    }
+    error.seen = true;
 
-})();
+    let errorMessage = error.stack;
+    while (error.cause) {
+        errorMessage += "\nCaused by: "
+        errorMessage += error.cause.stack;
+        error = error.cause;
+    }
+    console.error(errorMessage);
+}
+
+browser.addEventListener("error", (ev) => {logError(ev)});
+browser.addEventListener("unhandledrejection", (ev) => {logError(ev)});

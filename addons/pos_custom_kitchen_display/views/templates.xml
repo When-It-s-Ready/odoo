@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+          <template id="pos_custom_kitchen_display.wrapper" name="Kitchen Display">
+            <html>
+                <head>
+                    <link type="image/x-icon" rel="shortcut icon" href="/web/static/img/favicon.ico"/>
+                    <t t-call-assets="pos_custom_kitchen_display.assets_display"/>
+                </head>
+
+                <body>
+                </body>
+            </html>
+          </template>
+    </data>
+</odoo>
