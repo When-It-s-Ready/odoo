@@ -15,7 +15,7 @@ import {
     floatIsZero,
 } from "@web/core/utils/numbers";
 
-import { PosCollection as KDCollection } from "@point_of_sale/app/store/models";
+import { PosCollection } from "@point_of_sale/app/store/models";
 
 const { DateTime } = luxon;
 
@@ -46,6 +46,15 @@ class BaseKDModel {
     }
 }
 
+class KDCollection extends PosCollection {
+
+    fromList(list) {
+        for (const entry of list) {
+            this.add(entry);
+        }
+    }
+}
+
 
 export class Ticketline extends BaseKDModel {
     setup(_defaultObj, options) {
@@ -60,7 +69,45 @@ export class Ticketline extends BaseKDModel {
 
     moveStatus(){
         if (!this.line_status) {
-            this.line_status = "";
+            this.line_status = "pending";
+        } else if (this.line_status == "pending"){
+            this.line_status = "done";
+        }
+    }
+
+    cancelStatus() {
+        this.line_status =  "cancel";
+    }
+}
+
+export class Ticket extends BaseKDModel {
+    setup(_defaultObj, options) {
+        super.setup(...arguments);
+        this.order = options.order;
+        this.ticket_status = options.ticket_status;
+        this.lines = new KDCollection().fromList(options.lines);
+        this.table = options.order;
+        this.create_time = options.create_time;
+    }
+
+    checkLines() {
+        for (const line of this.lines){
+            if( line.line_status == "pending" ){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    moveStatus() {
+        if(!this.ticket_status) {
+            this.ticket_status = "pending";
+        } else if (this.ticket_status == "pending") {
+            this.ticket_status = "ack";
+        } else if (this.ticket_status == "ack") {
+            if (checkLines()){
+                this.ticket_status == "done"
+            }
         }
     }
 }

@@ -28,19 +28,15 @@ export class KitchenDisplay extends Reactive{
         this.orm = orm;
         this.ui = ui;
 
-        this.db = new KitchenDisplayDB();
-
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
     }
 
-    // async _save_to_server(tickets, options) {
-    //     if(!tickets || !tickets.length){
-    //         return Promise.resolve([]);
-    //     }
-    //     var ticket_ids_to_sync = tickets.map((o) => o.id);
-    // }
+    async load_server_tickets() {
+        const loadedData = await this.orm.silent.call("kitchen.display", "get_tickets",[""]);
+        await this._processData(loadedData);
+    }    
 
     _load_tickets() {
         var jsons = this.db.get_tickets();

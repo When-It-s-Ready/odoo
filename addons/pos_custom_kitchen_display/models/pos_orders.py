@@ -50,7 +50,8 @@ class PosOrder(models.Model):
                         'note' : diff[item]['note']
                     }
                 )
-
+            
+            ticket.sendIfActive()
             
         return oid
 

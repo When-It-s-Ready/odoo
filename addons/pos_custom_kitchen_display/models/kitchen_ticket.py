@@ -23,19 +23,23 @@ class KitchenTicket(models.Model):
 
     def check_all_lines_done(self):
         for line in self.lines:
-            if line.line_status != 'done':
+            if line.line_status == 'pending':
                 return False
         return True
 
     
     def change_ticket_status(self):
-        if self.line_status == 'pending':
-            self.line_status = "ack"
-        elif self.line_status == 'ack':
+        if self.ticket_status == 'pending':
+            self.ticket_status = "ack"
+        elif self.ticket_status == 'ack':
             if self.check_all_lines_done():
-                self.line_status = 'ready'
-                                
-                            
+                self.ticket_status = 'done'
+    
+    def sendIfActive(self):
+        self.env.
+    
+    
+
 
 class KitchenTicketLine(models.Model):
     _name = "kitchen.ticket.line"
@@ -53,6 +57,9 @@ class KitchenTicketLine(models.Model):
     def change_line_status(self):
         if self.line_status == 'pending':
             self.line_status = 'done'
+    
+    def change_to_cancel(self):
+        self.line_status = 'cancel'
 
 
     
