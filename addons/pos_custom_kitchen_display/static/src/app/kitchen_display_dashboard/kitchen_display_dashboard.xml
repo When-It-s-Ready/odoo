@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="kitchenDisplayDashboard">
-        <header>
-            <div id="kitchen_dashboard" class="kitchen">
-                <div class="body_wrapper">
-                    <div class="container">
-                        <div class="top_bar">
-                            <ul>
-                                <li>
-                                    <span t-on-click="(e) => this.set_state(e,'draft')">
-                                        Waiting
-                                    </span>
-                                </li>
-                                <li>
-                                    <span t-on-click="(e) => this.set_state(e,'accepted')">
-                                        Accepted
-                                    </span>
-                                </li>
-                                <li>
-                                    <span t-on-click="(e) => this.set_state(e,'ready')">
-                                        Ready
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
+    <t t-name="pos_custom_kitchen_display.KitchenDisplayDashboard">
+        <Notebook>
+            <t t-set-slot="page_1" title="'Pending'" isVisible="true">
+                <div class="ms-1 mt-1">
+                    <div class="d-flex flex-row">
+                        <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
+                            <t t-if="ticket.ticket_status == 'pending'">
+                                <div class = "card me-3">
+                                    <li>
+                                        <t t-esc="ticket.id"/>
+                                        <t t-esc="ticket.ticket_status"/>
+                                    </li>
+                                </div>
+                            </t>
+                        </t>
                     </div>
                 </div>
-            </div>
-        </header>
-        <!-- <kanban> -->
-        <div >
-                <t t-if="state.tickets != []">
-                    <ul>
-                    <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
-                        <li>
-                            <t t-esc="ticket.id"/>
-                        </li>
-                    </t>
-                    </ul>
-                </t>
-        </div>
-        <!-- </kanban> -->
+            </t>
+            <t t-set-slot="page_2" title="'In progress'" isVisible="true">
+                <div class="ms-1 mt-1">
+                    <div class="d-flex flex-row">
+                        <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
+                            
+                            <t t-if="ticket.ticket_status == 'ack'">
+                                <li>
+                                    <t t-esc="ticket.id"/>
+                                    <t t-esc="ticket.ticket_status"/>
+                                </li>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </t>
+            <t t-set-slot="page_3" title="'Ready'" isVisible="true">
+                <div class="ms-1 mt-1">
+                    <div class="d-flex flex-row">
+                        <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
+                            
+                            <t t-if="ticket.ticket_status == 'done'">
+                                <li>
+                                    <t t-esc="ticket.id"/>
+                                    <t t-esc="ticket.ticket_status"/>
+                                </li>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </Notebook>
     </t>
 </templates>

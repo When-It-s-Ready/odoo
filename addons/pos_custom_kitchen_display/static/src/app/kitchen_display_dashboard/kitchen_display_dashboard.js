@@ -1,33 +1,29 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { Component, useState, mount } from  "@odoo/owl";
+import { Component, useState } from  "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { Notebook } from "@web/core/notebook/notebook";
 
-class KitchenDisplayDashboard extends Component {
+export class KitchenDisplayDashboard extends Component {
+    static template = "pos_custom_kitchen_display.KitchenDisplayDashboard";
+    static components = { Notebook };
     
     setup() {
         this.orm = useService("orm");
         this.state = useState({
-            current_state : 'draft',
+            current_state : 'pending',
             tickets: []
         });
         var that = this;
-        var test = this.orm.call("kitchen.display", "get_tickets",[""]);
-        console.log(test);
-        test.then((result) => {
+        this.orm.call("kitchen.display", "get_tickets",[""]).then((result) => {
             that.state.tickets = result["tickets"];
+            console.log(result['tickets']);
         });
+
     }
 
 
-    set_state(e, stage) {
-        this.current_state = state;
+    set_state(stage) {
+        this.state.current_state = stage;
     }
-
-
 }
-KitchenDisplayDashboard.template = "kitchenDisplayDashboard";
-
-// remember the tag name we put in the first step
-registry.category("actions").add("kitchen_display_dashboard", KitchenDisplayDashboard);

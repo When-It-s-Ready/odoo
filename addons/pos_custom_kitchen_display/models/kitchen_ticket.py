@@ -38,6 +38,11 @@ class KitchenTicket(models.Model):
         elif self.ticket_status == 'ack':
             if self.check_all_lines_done():
                 self.ticket_status = 'done'
+
+                
+    def create_json(self):
+        # TODO proper from our fields, reform sendIfActive to use this
+        pass
     
 
     def sendIfActive(self):

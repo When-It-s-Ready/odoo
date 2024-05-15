@@ -3,10 +3,10 @@
 
     <t t-name="pos_custom_kitchen_display.wrapper">
         <div class="d-flex flex-column">
-            <!-- <div class="flex-grow-1 overflow-auto bg-200"> -->
-                <!-- <KitchenDisplayDashboard/> -->
+            <div class="flex-grow-1 overflow-auto bg-200">
+                <KitchenDisplayDashboard/>
                 this should be visible
-            <!-- </div> -->
+            </div>
         </div>
     </t>
 

@@ -33,7 +33,9 @@
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
             # add the kitchen display files
-            'pos_custom_kitchen_display/static/src/**/*'
+            # 'pos_custom_kitchen_display/static/src/app/services/*',
+            'pos_custom_kitchen_display/static/src/app/*',
+            'pos_custom_kitchen_display/static/src/app/kitchen_display_dashboard/*'
         ],
     },
     'images': [
