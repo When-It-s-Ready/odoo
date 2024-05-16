@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
-from odoo.tools import date_utils
-import json
-
 
 class KitchenTicket(models.Model):
     _name = "kitchen.ticket"
@@ -38,26 +35,25 @@ class KitchenTicket(models.Model):
         elif self.ticket_status == 'ack':
             if self.check_all_lines_done():
                 self.ticket_status = 'done'
+        return self.ticket_status
 
                 
-    def create_json(self):
-        # TODO proper from our fields, reform sendIfActive to use this
-        pass
+    def export_for_ui(self):
+        return {
+            'id': self.id,
+            'order_ref': self.order_ref.id,
+            'ticket_status': self.ticket_status,
+            'lines': [line.export_for_ui() for line in self.lines],
+            'table': self.table.name,
+            'create_time': self.create_date.strftime("%H:%M")
+        }
     
 
     def sendIfActive(self):
         actives = self.env['kitchen.display'].search_count([('active','=','true')])
         if actives != 0:
-            rdata =  self.read()[0]
-            rdata['lines'] = []
-        
-            for line in self.lines:
-                dline = line.read()[0]
-                rdata["lines"].append(dline)
-
-        
-            json_data = json.dumps(rdata, default=date_utils.json_default)
-            self.env['bus.bus']._sendone("kitchen_display_channel","new_ticket", {"data": json_data})
+            tickets = self.export_for_ui()
+            self.env['bus.bus']._sendone("new_ticket", "new_ticket", {"tickets": tickets})
 
     
 
@@ -77,9 +73,16 @@ class KitchenTicketLine(models.Model):
     def change_line_status(self):
         if self.line_status == 'pending':
             self.line_status = 'done'
+        return self.line_status
     
     def change_to_cancel(self):
         self.line_status = 'cancel'
 
-
-    
+    def export_for_ui(self):
+        return {
+            'product_id': self.product_id.id,
+            'name': self.name,
+            'qty': self.qty,
+            'note': self.note,
+            'line_status': self.line_status
+        }

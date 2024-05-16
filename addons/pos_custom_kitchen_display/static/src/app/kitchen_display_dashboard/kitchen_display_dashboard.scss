@@ -1,0 +1,21 @@
+.o_notebook {
+    overflow-x: hidden;
+
+    .o_notebook_headers {
+        overflow-x: hidden;
+
+        .nav-item {
+            flex: 1 1 auto !important;
+            text-align: center !important;
+        }
+
+        .nav-link {
+            font-size: 1.5em;
+            color: $nav-tabs-link-active-color;
+
+            &.active {
+                background-color:#f7f7f7;
+            }
+        }
+    }
+}

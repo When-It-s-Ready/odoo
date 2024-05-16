@@ -13,8 +13,11 @@ class KitchenDisplay(models.Model):
 
     def get_tickets(self):
         tickets = self.env['kitchen.ticket'].search([])
-        res = { "tickets": tickets.read()}
+        res = { "tickets": [ticket.export_for_ui() for ticket in tickets]}
         return res
+
+        
+    # TODO: kitchen screen filter tickes by today
 
     def setActive(self):
         self.active = True
