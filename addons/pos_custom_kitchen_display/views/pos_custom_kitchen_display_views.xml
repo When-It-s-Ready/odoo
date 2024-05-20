@@ -94,8 +94,8 @@
                                     <div>
                                         <button string="Kitchen Display"
                                                 class="btn-primary" 
-                                                name="%(kitchen_display_dashboard_action)d"
-                                                type="action"
+                                                name="open_ui"
+                                                type="object"
                                                 help="Got To the Kitchen Screen"/>
                                         <br/>
                                         <br/>

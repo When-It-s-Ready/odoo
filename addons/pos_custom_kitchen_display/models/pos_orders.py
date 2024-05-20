@@ -51,7 +51,8 @@ class PosOrder(models.Model):
                     }
                 )
             
-            ticket.sendIfActive()
+            # not needed for polling
+            # ticket.sendIfActive()
             
         return oid
 

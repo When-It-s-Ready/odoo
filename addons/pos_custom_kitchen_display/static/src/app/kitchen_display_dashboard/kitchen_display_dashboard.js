@@ -12,28 +12,43 @@ export class KitchenDisplayDashboard extends Component {
     setup() {
         console.log(this.env.services);
         console.log(this.env.bus)
+        
+        this.disp = this.get_displ_id(); 
         this.orm = useService("orm");
         this.state = useState({
-            current_state : 'pending',
             tickets: []
         });
-        var that = this;
-        this.orm.call("kitchen.display", "get_tickets",[""]).then((result) => {
-            that.state.tickets = result["tickets"];
-            // TODO: delete this
-            console.log(result['tickets']);
+        this.orm.call("kitchen.display", "start_ticket_polling",["",this.disp]).then((result) => {
+            this.state.tickets = result["tickets"];
         });
-        this.bus = new EventBus();
-        this.bus.addEventListener("new_ticket", (e) => this.new_ticket(e));
-
+        const poll = this.polling_tickets.bind(this);
+        poll();
     }
 
-    new_ticket(event){
-        console.log(event);
+    polling_tickets() {
+        this.orm.call("kitchen.display", "get_next_tickets",["",this.disp]).then((result) => {
+            this.state.tickets = result["tickets"].concat(this.state.tickets);
+            setTimeout(this.polling_tickets.bind(this), 5000);
+        });
     }
 
 
-    set_state(stage) {
-        this.state.current_state = stage;
+    get_displ_id(){
+        let params = new URLSearchParams(window.location.search);
+        return params.get('disp_id');
+    }
+
+    updateTicketStatus(id){
+        console.log("update ticket with id", id);
+        this.orm.call("kitchen.ticket", "update_status_ui", ["",id]).then((result) => { 
+            if (result['status'] != 'error'){
+                for (var ticket of this.state.tickets){
+                    if (ticket.id == id){
+                        ticket.ticket_status = result['status'];
+                        break;
+                    }
+                }
+            }
+        });
     }
 }

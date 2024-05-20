@@ -21,6 +21,10 @@ class KitchenTicket(models.Model):
     # TODO delete this
     items = fields.Char(string = "Items")
 
+    
+    def get_create_date(self):
+        return self.create_date
+
 
     def check_all_lines_done(self):
         for line in self.lines:
@@ -33,9 +37,19 @@ class KitchenTicket(models.Model):
         if self.ticket_status == 'pending':
             self.ticket_status = "ack"
         elif self.ticket_status == 'ack':
-            if self.check_all_lines_done():
-                self.ticket_status = 'done'
+            # if self.check_all_lines_done():
+            #     self.ticket_status = 'done'
+            self.ticket_status = 'done'
         return self.ticket_status
+
+    def update_status_ui(self, ticket_id):
+        print("this was called with ", ticket_id)
+        ticket = self.env['kitchen.ticket'].search([("id", "=", ticket_id)])
+        if ticket:
+            res = { "status": ticket.change_ticket_status()}
+        else:
+            res = { "status": "error" }
+        return res
 
                 
     def export_for_ui(self):
@@ -48,7 +62,7 @@ class KitchenTicket(models.Model):
             'create_time': self.create_date.strftime("%H:%M")
         }
     
-
+    # not needed for polling
     def sendIfActive(self):
         actives = self.env['kitchen.display'].search_count([('active','=','true')])
         if actives != 0:
