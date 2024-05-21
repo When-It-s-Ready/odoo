@@ -10,24 +10,19 @@ export class KitchenDisplayDashboard extends Component {
     static serviceDependencies = ["pos", "orm", "bus_service"];
     
     setup() {
-        console.log(this.env.services);
-        console.log(this.env.bus)
-        
+
         this.disp = this.get_displ_id(); 
         this.orm = useService("orm");
         this.state = useState({
             tickets: []
-        });
-        this.orm.call("kitchen.display", "start_ticket_polling",["",this.disp]).then((result) => {
-            this.state.tickets = result["tickets"];
         });
         const poll = this.polling_tickets.bind(this);
         poll();
     }
 
     polling_tickets() {
-        this.orm.call("kitchen.display", "get_next_tickets",["",this.disp]).then((result) => {
-            this.state.tickets = result["tickets"].concat(this.state.tickets);
+        this.orm.call("kitchen.display", "ticket_polling",["",this.disp]).then((result) => {
+            this.state.tickets = result["tickets"];
             setTimeout(this.polling_tickets.bind(this), 5000);
         });
     }
@@ -39,7 +34,6 @@ export class KitchenDisplayDashboard extends Component {
     }
 
     updateTicketStatus(id){
-        console.log("update ticket with id", id);
         this.orm.call("kitchen.ticket", "update_status_ui", ["",id]).then((result) => { 
             if (result['status'] != 'error'){
                 for (var ticket of this.state.tickets){
@@ -50,5 +44,51 @@ export class KitchenDisplayDashboard extends Component {
                 }
             }
         });
+    }
+
+    checkLinesStatus(id){
+        for(var ticket of this.state.tickets){
+            if(ticket.id == id){
+                for(var line of ticket.lines){
+                    if(line.line_status == 'pending' || line.line_status =='attention'){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }
+
+    updateLineStatus(id, line_id){
+        this.orm.call("kitchen.ticket.line", "update_line_status_ui", ["",line_id]).then((result) => { 
+            if (result['status'] != 'error'){
+                for (var ticket of this.state.tickets){
+                    if(ticket.id == id){
+                        for(var line of ticket.lines){
+                            if(line.id == line_id){
+                                line.line_status = result['status'];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    get_line_status_class(status){
+        if (status == 'done'){
+            return ' list-group-item-success';
+        }
+        if (status == 'cancel'){
+            return ' list-group-item-danger';
+        }
+        if (status == 'attention'){
+            return ' list-group-item-warning';
+        }
+        if (status == 'att_done'){
+            return ' list-group-item-info';
+        }
+        return ''
     }
 }

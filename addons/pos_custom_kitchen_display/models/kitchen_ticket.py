@@ -28,7 +28,13 @@ class KitchenTicket(models.Model):
 
     def check_all_lines_done(self):
         for line in self.lines:
-            if line.line_status == 'pending':
+            if line.line_status == 'pending' or line.line_status =='attention':
+                return False
+        return True
+    
+    def check_all_lines_cancel(self):
+        for line in self.lines:
+            if line.line_status != 'cancel':
                 return False
         return True
 
@@ -37,13 +43,14 @@ class KitchenTicket(models.Model):
         if self.ticket_status == 'pending':
             self.ticket_status = "ack"
         elif self.ticket_status == 'ack':
-            # if self.check_all_lines_done():
-            #     self.ticket_status = 'done'
-            self.ticket_status = 'done'
+            if self.check_all_lines_cancel():
+                self.ticket_status = 'cancel'
+                return 'cancel'
+            if self.check_all_lines_done():
+                self.ticket_status = 'done'
         return self.ticket_status
 
     def update_status_ui(self, ticket_id):
-        print("this was called with ", ticket_id)
         ticket = self.env['kitchen.ticket'].search([("id", "=", ticket_id)])
         if ticket:
             res = { "status": ticket.change_ticket_status()}
@@ -59,7 +66,7 @@ class KitchenTicket(models.Model):
             'ticket_status': self.ticket_status,
             'lines': [line.export_for_ui() for line in self.lines],
             'table': self.table.name,
-            'create_time': self.create_date.strftime("%H:%M")
+            'time': self.create_date.strftime("%H:%M"),
         }
     
     # not needed for polling
@@ -82,18 +89,30 @@ class KitchenTicketLine(models.Model):
     qty = fields.Float('Quantity', digits='Product Unit of Measure', default = 1)
     note = fields.Char(string= 'Note', help="Internal note for the kitchen")
     line_status = fields.Selection(string="Line Status",
-                                   selection=[("pending", "Pending"), ("done","Ready"), ('cancel', "Cancel")], help="Status of the ticket line", default = 'pending')
+                                   selection=[("pending", "Pending"), ("done","Ready"), ('cancel', "Cancel"), ('attention', "Attention"), ('att_done', "Attention Ready")], help="Status of the ticket line", default = 'pending')
 
     def change_line_status(self):
         if self.line_status == 'pending':
             self.line_status = 'done'
+        elif self.line_status == 'attention':
+            self.line_status = 'att_done'
         return self.line_status
+    
+    def update_line_status_ui(self, line_id):
+        line = self.env['kitchen.ticket.line'].search([("id", "=", line_id)])
+        if line:
+            res = { "status": line.change_line_status()}
+        else:
+            res = { "status": "error" }
+        return res
+        
     
     def change_to_cancel(self):
         self.line_status = 'cancel'
 
     def export_for_ui(self):
         return {
+            'id': self.id,
             'product_id': self.product_id.id,
             'name': self.name,
             'qty': self.qty,

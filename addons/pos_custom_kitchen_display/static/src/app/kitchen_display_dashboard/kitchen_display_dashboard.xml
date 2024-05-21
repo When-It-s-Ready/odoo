@@ -9,12 +9,12 @@
                             <div class = "card me-3">
                                 <div class="card-header text-center">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.create_time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
-                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.product_id">
-                                            <li class="list-group-item">
+                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.id">
+                                            <li t-attf-class="list-group-item{{ get_line_status_class(line.line_status) }}">
                                                 <div class="d-flex justify-content-between">
                                                     <h5><t t-esc="line.name"/></h5>
                                                     <div class="p-1"></div>
@@ -42,12 +42,15 @@
                             <div class = "card me-3">
                                 <div class="card-header text-center">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.create_time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
+                                    <t t-if="this.checkLinesStatus(ticket.id)">
+                                        <a href="#" class="stretched-link" t-on-click="() => this.updateTicketStatus(ticket.id)"/>
+                                    </t>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
-                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.product_id">
-                                            <li class="list-group-item">
+                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.id">
+                                            <li t-attf-class="list-group-item{{ get_line_status_class(line.line_status) }}">
                                                 <div class="d-flex justify-content-between">
                                                     <h5><t t-esc="line.name"/></h5>
                                                     <div class="p-1"></div>
@@ -58,10 +61,10 @@
                                                         <t t-esc="line.note"/>
                                                     </p>
                                                 </t>
+                                                <a href="#" class="stretched-link" t-on-click="() => this.updateLineStatus(ticket.id,line.id)"/>
                                             </li>
                                         </t>
                                     </ul>
-                                    <a href="#" class="stretched-link" t-on-click="() => this.updateTicketStatus(ticket.id)"/>
                                 </div>
                             </div>
                         </t>
@@ -75,11 +78,11 @@
                             <div class = "card me-3">
                                 <div class="card-header text-center">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.create_time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
-                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.product_id">
+                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.id">
                                             <li class="list-group-item">
                                                 <div class="d-flex justify-content-between">
                                                     <h5><t t-esc="line.name"/></h5>

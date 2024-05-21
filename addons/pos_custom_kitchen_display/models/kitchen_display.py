@@ -8,10 +8,18 @@ class KitchenDisplay(models.Model):
     _description ="POS Kitchen Screen"
 
 
-    # maybe not needed
+    # TODO maybe not needed
     pos_id = fields.Char(help="Id of the corresponding pos system")
+    # TODO maybe not needed
     active = fields.Boolean(help="Check if display is currently connected", default = "false")
+    # TODO not needed
     last_ticket = fields.Datetime('Last polled time')
+    # TODO not needed
+    init_time = fields.Datetime('Initial time value for ticket gathering', required=True, readonly=False,
+                                  default=lambda self: fields.datetime.now())
+    
+
+    name = fields.Char(help="Display Name", required=True, default="Kitchen Display")
 
 
     def open_ui(self):
@@ -20,30 +28,20 @@ class KitchenDisplay(models.Model):
             'url': "/kdisplay" + '?disp_id=%d' % self.id,
             'target': 'self',
         }
-                
+
+    def reset(self):
+        self.init_time = datetime.combine(date.today(), datetime.min.time())
+        return
 
 
-    def start_ticket_polling(self, disp_id):
+    def ticket_polling(self, disp_id):
         disp = self.env['kitchen.display'].search([("id", "=", disp_id)])
-        dt = datetime.combine(date.today(), datetime.min.time())
-        tickets = self.env['kitchen.ticket'].search([("create_date", ">", dt)], order="create_date desc")
-        res = { "tickets": [ticket.export_for_ui() for ticket in tickets]}
-        if tickets:
-            disp.last_ticket = tickets[0].create_date
-        
-        return res
-
-    def get_next_tickets(self, disp_id):
-        disp = self.env['kitchen.display'].search([("id", "=", disp_id)])
-        tickets = self.env['kitchen.ticket'].search([("create_date",">",disp.last_ticket)], order="create_date desc")
-        if tickets:
-            disp.last_ticket = tickets[0].create_date
+        tickets = self.env['kitchen.ticket'].search([("create_date", ">", disp.init_time)], order="create_date desc")
         res = { "tickets": [ticket.export_for_ui() for ticket in tickets]}
         return res
 
         
-    # TODO: kitchen screen filter tickes by today
-
+    # TODO not needed
     def setActive(self):
         self.active = True
 

@@ -27,8 +27,9 @@ class PosOrder(models.Model):
 
         oid = super(PosOrder, self)._process_order(order, draft, existing_order)
         ord =  self.env['pos.order'].search([('id', '=', oid)], limit=1)
-        diff = ord.order_difference(json.loads(last))
-        
+        diffs = ord.order_difference(json.loads(last))
+
+        diff = diffs['new']
         if diff !={}:
             ord.ticket_count = ord.ticket_count + 1
             ticket = self.env['kitchen.ticket'].create(
@@ -51,25 +52,64 @@ class PosOrder(models.Model):
                     }
                 )
             
-            # not needed for polling
-            # ticket.sendIfActive()
-            
+        cancels = diffs['canceled']
+        if cancels:
+            for item in cancels:
+                tickets = self.env['kitchen.ticket'].search(
+                    [
+                        ("order_ref","=",ord.id), 
+                        ("ticket_status", '!=', "done"),
+                        ("lines", "any", [('product_id', "=", cancels[item]['product_id'])]),
+                    ], order="create_date desc")
+                if tickets:
+                    for ticket in tickets:
+                        for line in ticket.lines:
+                            if(line.product_id.id == cancels[item]['product_id'] and (line.line_status =="pending" or line.line_status =="attention")):
+                                line.change_to_cancel()
+                                cancels[item]['to_delete'] -= line.qty
+                                break
+                        if(cancels[item]['to_delete'] <= 0):
+                            break
+                    if(cancels[item]['quantity'] > 0 and cancels[item]['to_delete'] <= 0):
+                        self.env['kitchen.ticket.line'].create(
+                            {
+                                'ticket_id' : tickets[0].id,
+                                'product_id' : int(cancels[item]['product_id']),
+                                'name' : cancels[item]['name'],
+                                'qty' : cancels[item]['quantity'],
+                                'note' : cancels[item]['note'],
+                                'line_status': 'attention'
+                            }
+                        )
         return oid
 
         
     def order_difference(self, old):
         curr = json.loads(self.last_order_preparation_change)
-        diff = {}
+        print(curr)
+        diff = {
+            'new': {},
+            'canceled': {}
+        }
         for item in list(curr.keys())+list(old.keys()):
             if item in curr and item in old:
-                if curr[item]['quantity'] != old[item]['quantity']:
-                    diff[curr[item]['line_uuid']] = curr[item].copy()
-                    diff[curr[item]['line_uuid']]['quantity'] -= old[item]['quantity']
+                if curr[item]['quantity'] > old[item]['quantity']:
+                    diff['new'][curr[item]['line_uuid']] = curr[item].copy()
+                    diff['new'][curr[item]['line_uuid']]['quantity'] -= old[item]['quantity']
+                elif curr[item]['quantity'] < old[item]['quantity']:
+                    # DELETION
+                    diff['canceled'][curr[item]['line_uuid']] = curr[item].copy()
+                    diff['canceled'][curr[item]['line_uuid']]['to_delete'] = old[item]['quantity']-curr[item]['quantity']
+
             elif item in curr and item not in old:
-                diff[curr[item]['line_uuid']] = curr[item].copy()
+                if(curr[item]['quantity'] > 0):
+                    diff['new'][curr[item]['line_uuid']] = curr[item].copy()
             else:
-                diff[old[item]['line_uuid']] = old[item].copy()
-                diff[old[item]['line_uuid']]['quantity'] = -old[item]['quantity']
+                if(old[item]['quantity'] > 0):
+                    diff['canceled'][old[item]['line_uuid']] = old[item].copy()
+                    diff['canceled'][old[item]['line_uuid']]['quantity'] = 0
+                    diff['canceled'][old[item]['line_uuid']]['to_delete'] = old[item]['quantity']
+
         return diff
     
 class PosOrderLine(models.Model):
