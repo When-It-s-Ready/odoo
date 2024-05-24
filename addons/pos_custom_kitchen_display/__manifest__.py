@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'POS Kitchen Screen',
-    'description': 'POS Kitchen Screen generates a panel for the kitchen to be able '
-                    'to see and handle the preparation of the POS orders.',
-    'summary': 'POS Kitchen Screen generates a panel for the kitchen to be able '
-               'to see and handle the preparation of the POS orders.',
+    'name': 'POS Custom Kitchen Display',
+    'description': 'POS Custom Kitchen Display allows kitchen panels to be able to see tickets that correspond to orders accepted through the point of Sale System.',
+    'summary': 'POS Custom Kitchen Display allows kitchen panels to be able to see tickets that correspond to orders accepted through the point of Sale System.',
     'category': 'Point Of Sale',
     'version': '17.0.1.0.1',
     'depends': ['point_of_sale', 'pos_restaurant'],

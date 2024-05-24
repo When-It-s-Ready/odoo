@@ -75,15 +75,47 @@
                 <div class="d-flex flex-row flex-wrap">
                     <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
                         <t t-if="ticket.ticket_status == 'done'">
-                            <div class = "card me-3">
-                                <div class="card-header text-center">
+                            <div class = "card me-3 bg-primary">
+                                <div class="card-header text-center text-white">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
                                     <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         <t t-foreach="ticket.lines" t-as="line" t-key="line.id">
-                                            <li class="list-group-item">
+                                            <li t-attf-class="list-group-item{{ line.line_status == 'cancel' ? ' list-group-item-danger' : ' inherit_bg' }}">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5><t t-esc="line.name"/></h5>
+                                                    <div class="p-1"></div>
+                                                    <h5><t t-esc="line.qty"/></h5>
+                                                </div>
+                                                <t t-if="line.note != ''">
+                                                    <p>
+                                                        <t t-esc="line.note"/>
+                                                    </p>
+                                                </t>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </t>
+            <t t-set-slot="page_4" title="'Canceled'" isVisible="true">
+                <div class="d-flex flex-row flex-wrap">
+                    <t t-foreach="state.tickets" t-as="ticket" t-key="ticket.id">
+                        <t t-if="ticket.ticket_status == 'cancel'">
+                            <div class = "card me-3 bg-danger">
+                                <div class="card-header text-center text-white">
+                                    <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
+                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <t t-foreach="ticket.lines" t-as="line" t-key="line.id">
+                                            <li t-attf-class="list-group-item list-group-item-danger inherit_bg">
                                                 <div class="d-flex justify-content-between">
                                                     <h5><t t-esc="line.name"/></h5>
                                                     <div class="p-1"></div>

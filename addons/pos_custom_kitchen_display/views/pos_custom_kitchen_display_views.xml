@@ -31,7 +31,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="id"/>
-                <field name="pos_id"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -42,7 +42,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="table"/>
-                <field name='create_time'/>
+                <field name='create_date'/>
                 <field name="ticket_status"/>
             </tree>
         </field>
@@ -61,52 +61,6 @@
             </tree>
         </field>
     </record>
-
-
-    <record id="kitchen_display_view_form" model="ir.ui.view">
-        <field name="name">kitchen.display.view.form</field>
-        <field name="model">kitchen.display</field>
-        <field name="arch" type="xml">
-            <form class="kitchen_form_view">
-                <sheet>
-                    <div class="row mt16 o_settings_container"
-                         name="auto_approval">
-                        <div class="col-12 col-lg-6 o_setting_box"> 
-                            <div class="o_setting_left_pane">
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="pos_id"/>
-                                <div class="text-muted">
-                                    <div>
-                                        <field name="pos_id"/>
-                                    </div>
-                                    This will be the Allowed POS for this pos
-                                    Kitchen
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box"
-                             id="kitchen_display">
-                            <div class="o_setting_left_pane">
-                            </div>
-                            <div class="o_setting_right_pane">
-                                    <div>
-                                        <button string="Kitchen Display"
-                                                class="btn-primary" 
-                                                name="open_ui"
-                                                type="object"
-                                                help="Got To the Kitchen Screen"/>
-                                        <br/>
-                                        <br/>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
 
     <record id='kitchen_display_view_kanban' model='ir.ui.view'>
         <field name='name'>kitchen.display.view.kanban</field>

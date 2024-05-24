@@ -15,11 +15,6 @@ class KitchenTicket(models.Model):
                                     help='To know the status of the ticket', default = 'pending')
     lines = fields.One2many("kitchen.ticket.line", "ticket_id", string = "Ticket lines")
     table = fields.Many2one("restaurant.table", string="Table")
-    # TODO not needed as well create_date exists 
-    create_time = fields.Datetime('Creation date', required=True, readonly=False,
-                                  default=lambda self: fields.datetime.now())
-    # TODO delete this
-    items = fields.Char(string = "Items")
 
     
     def get_create_date(self):
@@ -40,12 +35,12 @@ class KitchenTicket(models.Model):
 
     
     def change_ticket_status(self):
+        if self.check_all_lines_cancel():
+            self.ticket_status = 'cancel'
+            return 'cancel'
         if self.ticket_status == 'pending':
             self.ticket_status = "ack"
         elif self.ticket_status == 'ack':
-            if self.check_all_lines_cancel():
-                self.ticket_status = 'cancel'
-                return 'cancel'
             if self.check_all_lines_done():
                 self.ticket_status = 'done'
         return self.ticket_status
@@ -68,13 +63,6 @@ class KitchenTicket(models.Model):
             'table': self.table.name,
             'time': self.create_date.strftime("%H:%M"),
         }
-    
-    # not needed for polling
-    def sendIfActive(self):
-        actives = self.env['kitchen.display'].search_count([('active','=','true')])
-        if actives != 0:
-            tickets = self.export_for_ui()
-            self.env['bus.bus']._sendone("new_ticket", "new_ticket", {"tickets": tickets})
 
     
 

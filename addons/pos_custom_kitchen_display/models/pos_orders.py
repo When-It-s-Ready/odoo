@@ -36,7 +36,6 @@ class PosOrder(models.Model):
                 {
                     'order_ref': oid,
                     'table': ord.table_id.id,
-                    'items': json.dumps(diff)
                 }
             )
 
@@ -111,11 +110,3 @@ class PosOrder(models.Model):
                     diff['canceled'][old[item]['line_uuid']]['to_delete'] = old[item]['quantity']
 
         return diff
-    
-class PosOrderLine(models.Model):
-    _inherit = "pos.order.line"
-    
-    ticket_id = fields.Many2one("kitchen.ticket")
-    ticket_selection = fields.Selection(
-        selection = [('empty', 'Unassigned'), ('assigned', 'Assigned')], default = 'empty'
-    )

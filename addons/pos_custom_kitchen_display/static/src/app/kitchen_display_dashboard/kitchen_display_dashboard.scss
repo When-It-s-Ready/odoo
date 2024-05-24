@@ -18,4 +18,12 @@
             }
         }
     }
+    
+    .inherit_bg {
+        background-color: inherit;
+    }
+
+    .list-group-item-danger h5, .list-group-item-danger p {
+        text-decoration: line-through;
+    }
 }
