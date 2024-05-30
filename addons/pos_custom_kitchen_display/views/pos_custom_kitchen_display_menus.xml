@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--Kitchen screen menu item    -->
+    <!--Kitchen screen menu item, specify that this is a menu entry in the point_of_sale root navbar    -->
     <menuitem id="kitchen_display_menu"
               name="Kitchen Display"
               parent="point_of_sale.menu_point_root"

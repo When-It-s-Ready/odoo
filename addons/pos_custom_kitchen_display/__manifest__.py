@@ -7,6 +7,7 @@
     'version': '17.0.1.0.1',
     'depends': ['point_of_sale', 'pos_restaurant'],
     'data': [
+        "data/ir_cron_data.xml",
         "security/ir.model.access.csv",
         "views/pos_custom_kitchen_display_views.xml",
         "views/pos_custom_kitchen_display_menus.xml",
@@ -31,7 +32,6 @@
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
             # add the kitchen display files
-            # 'pos_custom_kitchen_display/static/src/app/services/*',
             'pos_custom_kitchen_display/static/src/app/*',
             'pos_custom_kitchen_display/static/src/app/kitchen_display_dashboard/*'
         ],

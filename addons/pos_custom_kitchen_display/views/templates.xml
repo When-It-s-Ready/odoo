@@ -4,6 +4,7 @@
             <html>
                 <head>
                     <link type="image/x-icon" rel="shortcut icon" href="/web/static/img/favicon.ico"/>
+                    <!-- call the assets seen in the __manifest__.py -->
                     <t t-call-assets="pos_custom_kitchen_display.assets_display"/>
                 </head>
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- cron job to delete tickets periodically. 
+        currently set up every 5 days (interval_number), to delete 5-day old tickets (days parameter) -->
+    <record id="ir_cron_kitchen_ticket_delete_history" model="ir.cron">
+        <field name="name">Kitchen Tickets: Delete old tickets from the database</field>
+        <field name="model_id" ref="pos_custom_kitchen_display.model_kitchen_ticket"/>
+        <field name="state">code</field>
+        <field name="code">model.delete_old_tickets(days=5)</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">5</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+</odoo>

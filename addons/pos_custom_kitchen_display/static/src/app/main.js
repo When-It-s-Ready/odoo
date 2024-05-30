@@ -1,4 +1,5 @@
 /** @odoo-module */
+// code from the playground tutorial module
 
 import { browser } from "@web/core/browser/browser";
 import { whenReady } from "@odoo/owl";
@@ -6,12 +7,10 @@ import { mountComponent } from "@web/env";
 import { KitchenDisplayWrapper } from "./kd_wrapper";
 import { templates } from "@web/core/assets";
 
-// Mount the Playground component when the document.body is ready
+// Mount the Kitchen Display Wrapper component when the document.body is ready
 whenReady( () => {
     mountComponent(KitchenDisplayWrapper, document.body, { templates, dev: true, name: "Kitchen Display Wrapper" });
 });
-
-
 
 /**
  * This code is iterating over the cause property of an error object to console.error a string

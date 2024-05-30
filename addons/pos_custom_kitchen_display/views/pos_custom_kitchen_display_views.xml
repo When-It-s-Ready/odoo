@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- This file handles the rendering of the backend page -->
 <odoo>
-    <!-- action for kitchen display-->
+    <!-- action for kitchen display, specify that the kitchen display backend screen can be seen as kanban as well-->
     <record id="kitchen_display_action" model="ir.actions.act_window">
         <field name="name">Kitchen Display</field>
         <field name="res_model">kitchen.display</field>
@@ -19,12 +20,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record id="kitchen_display_dashboard_action" model="ir.actions.client">
-        <field name="name">Kitchen Display Dashboard</field>
-        <field name="tag">kitchen_display_dashboard</field>
-        <field name="target">fullscreen</field>
-    </record>
-
+    <!-- for a kitchen display in a tree view show only the id and the name-->
     <record id="kitchen_display_view_tree" model="ir.ui.view">
         <field name="name">kitchen.display.view.tree</field>
         <field name="model">kitchen.display</field>
@@ -36,6 +32,7 @@
         </field>
     </record>
     
+    <!-- for a ticket in a tree view show the table, create_date and status of the ticket-->
     <record id="kitchen_ticket_view_tree" model="ir.ui.view">
         <field name="name">kitchen.ticket.view.tree</field>
         <field name="model">kitchen.ticket</field>
@@ -48,6 +45,7 @@
         </field>
     </record>
 
+    <!-- for each line in the ticket show the following fields -->
     <record id="kitchen_ticket_line_view_tree" model="ir.ui.view">
         <field name="name">kitchen.ticket.line.view.tree</field>
         <field name="model">kitchen.ticket.line</field>
@@ -62,6 +60,9 @@
         </field>
     </record>
 
+    <!-- for the kanban view in a kitchen display
+        show each display as a kanban card with init Date
+        and two buttons, one to open the display and the other to reset the init_time -->
     <record id='kitchen_display_view_kanban' model='ir.ui.view'>
         <field name='name'>kitchen.display.view.kanban</field>
         <field name='model'>kitchen.display</field>
