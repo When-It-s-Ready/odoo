@@ -7,7 +7,8 @@
               >
             
         <menuitem id="kitchen_display_menu_action" action="kitchen_display_action"/>
-        <menuitem id="kitchen_ticket_menu_action" action="kitchen_ticket_action"></menuitem>
+        <menuitem id="kitchen_ticket_menu_action" action="kitchen_ticket_action"/>
+        <menuitem id="kitchen_ticket_category_menu_action" action="kitchen_ticket_category_action"/>
     </menuitem>
 
 

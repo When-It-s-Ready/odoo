@@ -11,6 +11,7 @@
         "security/ir.model.access.csv",
         "views/pos_custom_kitchen_display_views.xml",
         "views/pos_custom_kitchen_display_menus.xml",
+        "views/product_view.xml",
         "views/templates.xml"
     ],
     'assets': {
@@ -32,6 +33,8 @@
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
             # add the kitchen display files
+            # sound origin https://pixabay.com/sound-effects/livechat-129007/
+            'pos_custom_kitchen_display/static/src/sound/*',
             'pos_custom_kitchen_display/static/src/app/*',
             'pos_custom_kitchen_display/static/src/app/kitchen_display_dashboard/*'
         ],

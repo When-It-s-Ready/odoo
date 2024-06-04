@@ -20,8 +20,10 @@ export class KitchenDisplayDashboard extends Component {
         this.orm = useService("orm");
         // tickets in the useState in order to refresh on any changes in the tickets
         this.state = useState({
-            tickets: []
+            tickets: [],
+            last_ticket: 0
         });
+        this.sound = new Audio('/pos_custom_kitchen_display/static/src/sound/notification.mp3');
         const poll = this.polling_tickets.bind(this);
         poll();
     }
@@ -30,6 +32,12 @@ export class KitchenDisplayDashboard extends Component {
     polling_tickets() {
         this.orm.call("kitchen.display", "ticket_polling",["",this.disp]).then((result) => {
             this.state.tickets = result["tickets"];
+            if(result["tickets"] != []){
+                if(result["tickets"][0]['id'] != this.state.last_ticket){
+                    this.sound.play();
+                    this.state.last_ticket = result["tickets"][0]['id'];
+                }
+            }
             setTimeout(this.polling_tickets.bind(this), 5000);
         });
     }

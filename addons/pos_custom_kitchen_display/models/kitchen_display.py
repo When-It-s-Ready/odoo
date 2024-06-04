@@ -15,6 +15,9 @@ class KitchenDisplay(models.Model):
     # Display name for each object
     name = fields.Char(help="Display Name", required=True, default="Kitchen Display")
 
+    # references the ticket categories that this screen accepts
+    ticket_category = fields.Many2many("kitchen.ticket.category", string= "Ticket categories")
+
     # function to open the kitchen display
     # called from the backend screen
     def open_ui(self):
@@ -34,7 +37,8 @@ class KitchenDisplay(models.Model):
     # called from the display screen clients
     def ticket_polling(self, disp_id):
         disp = self.env['kitchen.display'].search([("id", "=", disp_id)])
-        tickets = self.env['kitchen.ticket'].search([("create_date", ">", disp.init_time)], order="create_date desc")
+        tickets = self.env['kitchen.ticket'].search([
+            ("create_date", ">", disp.init_time), ("ticket_category", "in", disp.ticket_category.ids)], order="create_date desc")
         res = { "tickets": [ticket.export_for_ui() for ticket in tickets]}
         return res
         

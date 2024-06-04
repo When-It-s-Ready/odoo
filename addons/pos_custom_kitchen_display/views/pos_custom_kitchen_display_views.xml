@@ -20,6 +20,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="kitchen_ticket_category_action" model="ir.actions.act_window">
+        <field name="name">Kitchen Ticket Category</field>
+        <field name="res_model">kitchen.ticket.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     <!-- for a kitchen display in a tree view show only the id and the name-->
     <record id="kitchen_display_view_tree" model="ir.ui.view">
         <field name="name">kitchen.display.view.tree</field>
@@ -28,6 +34,7 @@
             <tree>
                 <field name="id"/>
                 <field name="name"/>
+                <field name="ticket_category" widget="many2many_tags"/>
             </tree>
         </field>
     </record>

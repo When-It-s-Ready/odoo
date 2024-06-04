@@ -23,6 +23,9 @@ class KitchenTicket(models.Model):
     # references the table that each ticket comes from
     table = fields.Many2one("restaurant.table", string="Table")
 
+    # references the category of the ticket
+    ticket_category = fields.Many2one("kitchen.ticket.category", string="Ticket category")
+
     
     # function to check if all ticket lines within this ticket are completed or canceled
     # used to transition the ticket in the done state
@@ -115,6 +118,7 @@ class KitchenTicketLine(models.Model):
     line_status = fields.Selection(string="Line Status",
                                    selection=[("pending", "Pending"), ("done","Ready"), ('cancel', "Cancel"), ('attention', "Attention"), ('att_done', "Attention Ready")], help="Status of the ticket line", default = 'pending')
 
+
     # move ticket line to ready status
     def change_line_status(self):
         if self.line_status == 'pending':
@@ -148,3 +152,11 @@ class KitchenTicketLine(models.Model):
             'note': self.note,
             'line_status': self.line_status
         }
+
+class KitchenTicketCategory(models.Model):
+    _name = "kitchen.ticket.category"
+    _description = "Ticket category"
+    _rec_name = "name"
+
+    name = fields.Char(string="Ticket category")
+    tickets = fields.One2many("kitchen.ticket", "ticket_category", string="Tickets")
