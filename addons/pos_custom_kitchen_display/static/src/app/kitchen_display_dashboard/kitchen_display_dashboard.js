@@ -34,7 +34,7 @@ export class KitchenDisplayDashboard extends Component {
         this.orm.call("kitchen.display", "ticket_polling",["",this.disp.id]).then(
             (result) => {
                 this.state.tickets = result["tickets"];
-                if(result["tickets"] != []){
+                if(!!result["tickets"] && result["tickets"].length > 0){
                     if(result["tickets"][0]['id'] != this.state.last_ticket){
                         this.sound.play();
                         this.state.last_ticket = result["tickets"][0]['id'];
