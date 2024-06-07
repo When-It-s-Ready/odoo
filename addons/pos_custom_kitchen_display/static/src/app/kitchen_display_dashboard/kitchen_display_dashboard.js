@@ -16,12 +16,13 @@ export class KitchenDisplayDashboard extends Component {
     
     setup() {
 
-        this.disp = this.get_displ_id(); 
+        this.disp = this.get_disp_info(); 
         this.orm = useService("orm");
         // tickets in the useState in order to refresh on any changes in the tickets
         this.state = useState({
             tickets: [],
-            last_ticket: 0
+            last_ticket: 0,
+            failed_polls: 0
         });
         this.sound = new Audio('/pos_custom_kitchen_display/static/src/sound/notification.mp3');
         const poll = this.polling_tickets.bind(this);
@@ -30,23 +31,38 @@ export class KitchenDisplayDashboard extends Component {
 
     // on successful run, it will trigger itself after 5 seconds
     polling_tickets() {
-        this.orm.call("kitchen.display", "ticket_polling",["",this.disp]).then((result) => {
-            this.state.tickets = result["tickets"];
-            if(result["tickets"] != []){
-                if(result["tickets"][0]['id'] != this.state.last_ticket){
-                    this.sound.play();
-                    this.state.last_ticket = result["tickets"][0]['id'];
+        this.orm.call("kitchen.display", "ticket_polling",["",this.disp.id]).then(
+            (result) => {
+                this.state.tickets = result["tickets"];
+                if(result["tickets"] != []){
+                    if(result["tickets"][0]['id'] != this.state.last_ticket){
+                        this.sound.play();
+                        this.state.last_ticket = result["tickets"][0]['id'];
+                    }
                 }
+                this.failed_polls = 0;
+                setTimeout(this.polling_tickets.bind(this), 1000*this.disp.ps);
+            },
+            (reject)=> {
+                this.failed_polls +=1;
+                if (this.failed_polls >= this.disp.thr){
+                    alert("Failed error request threshold, refresh page and check server status");
+                }else {
+                    setTimeout(this.polling_tickets.bind(this), 1000*this.disp.eps);
             }
-            setTimeout(this.polling_tickets.bind(this), 5000);
         });
     }
 
 
     // get the display id from the url parameters
-    get_displ_id(){
+    get_disp_info(){
         let params = new URLSearchParams(window.location.search);
-        return params.get('disp_id');
+        return {
+            'id': params.get('disp_id'),
+            'ps': params.get('ps'),
+            'eps': params.get('eps'),
+            'thr': params.get('thr')
+        };
     }
 
     // request ticket update from the backend for a specific ticket

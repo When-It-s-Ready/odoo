@@ -17,13 +17,20 @@ class KitchenDisplay(models.Model):
 
     # references the ticket categories that this screen accepts
     ticket_category = fields.Many2many("kitchen.ticket.category", string= "Ticket categories")
+    # ticket_polling time from the frontend
+    success_polling = fields.Integer(string="Polling time (seconds)", help="Set the polling time in seconds for successful polling requests", default = 5)
+    # error polling time for missed requests from frontend
+    error_polling = fields.Integer(string="Error Polling time (seconds)", help="Set the polling time in seconds for missed polling requests", default = 10)
+    # threshold for missed requests upon which frontend will have to check server status
+    missed_thresh = fields.Integer(string="Error Threshold", help="Set up the limit of failed requests from frontend to notify the client", default = 6)
+
 
     # function to open the kitchen display
     # called from the backend screen
     def open_ui(self):
         return {
             'type': 'ir.actions.act_url',
-            'url': "/kdisplay" + '?disp_id=%d' % self.id,
+            'url': "/kdisplay" + '?disp_id=%d&ps=%d&eps=%d&thr=%d' % (self.id, self.success_polling, self.error_polling, self.missed_thresh) ,
             'target': 'self',
         }
 
