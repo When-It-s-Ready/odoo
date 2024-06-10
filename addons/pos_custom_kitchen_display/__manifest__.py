@@ -15,6 +15,9 @@
         "views/templates.xml"
     ],
     'assets': {
+        'point_of_sale._assets_pos': [
+            'pos_custom_kitchen_display/static/src/overrides/*'
+        ],
         'pos_custom_kitchen_display.assets_display': [
             # bootstrap
             ('include', 'web._assets_helpers'),

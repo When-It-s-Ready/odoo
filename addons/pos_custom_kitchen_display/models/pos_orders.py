@@ -114,8 +114,11 @@ class PosOrder(models.Model):
             'canceled': {}
         }
         for item in list(curr.keys())+list(old.keys()):
-
-            cat = self.env['product.product'].search([("id", "=", curr[item]['product_id'])]).product_tmpl_id.ticket_category.id
+            if (item in curr.keys()):
+                cat = self.env['product.product'].search([("id", "=", curr[item]['product_id'])]).product_tmpl_id.ticket_category.id
+            else:
+                cat = self.env['product.product'].search([("id", "=", old[item]['product_id'])]).product_tmpl_id.ticket_category.id
+                
             # if an item exists both in the previous and current status of the order, 
             # the quantity will show us if extra needs to be added, or removed
             if item in curr and item in old:
@@ -148,3 +151,16 @@ class PosOrder(models.Model):
                     diff['canceled'][cat][old[item]['line_uuid']]['to_delete'] = old[item]['quantity']
 
         return diff
+    
+    
+    @api.model
+    def update_split_order(self, order):
+        existing_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['name']), ('state', '=', 'draft')], limit=1)
+
+        if existing_order:
+            pos_order = existing_order
+            pos_order.lines.unlink()
+            order['user_id'] = pos_order.user_id.id
+            pos_order.write(self._order_fields(order))
+
+            pos_order._link_combo_items(order)
