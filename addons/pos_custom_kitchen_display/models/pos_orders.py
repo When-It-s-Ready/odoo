@@ -158,9 +158,15 @@ class PosOrder(models.Model):
         existing_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['name']), ('state', '=', 'draft')], limit=1)
 
         if existing_order:
-            pos_order = existing_order
-            pos_order.lines.unlink()
-            order['user_id'] = pos_order.user_id.id
-            pos_order.write(self._order_fields(order))
+            existing_order.lines.unlink()
+            existing_order.write(self._order_fields(order))
+            existing_order._link_combo_items(order)
 
-            pos_order._link_combo_items(order)
+
+    @api.model
+    def update_transfer_table(self, order_ref, table):
+        order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_ref), ('state', '=', 'draft')], limit=1)
+
+        if order:
+            for ticket in order.kitchen_tickets:
+                ticket.table = table
