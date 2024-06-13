@@ -18,6 +18,7 @@ export class KitchenDisplayDashboard extends Component {
 
         this.disp = this.get_disp_info(); 
         this.orm = useService("orm");
+        this.timeoffset = new Date().getTimezoneOffset();
         // tickets in the useState in order to refresh on any changes in the tickets
         this.state = useState({
             tickets: [],
@@ -128,5 +129,12 @@ export class KitchenDisplayDashboard extends Component {
             return ' list-group-item-info';
         }
         return ''
+    }
+
+    calc_time_offset(time){
+        return new Date(Date.parse(time) - this.timeoffset * 60000).toLocaleTimeString("en-GB", {
+            hour: '2-digit',
+            minute:'2-digit'
+          });
     }
 }

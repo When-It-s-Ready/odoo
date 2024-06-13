@@ -77,7 +77,7 @@ class KitchenTicket(models.Model):
             'ticket_status': self.ticket_status,
             'lines': [line.export_for_ui() for line in self.lines],
             'table': self.table.name,
-            'time': self.create_date.strftime("%H:%M"),
+            'time': self.create_date,
         }
 
     # cron job to delete day-old tickets

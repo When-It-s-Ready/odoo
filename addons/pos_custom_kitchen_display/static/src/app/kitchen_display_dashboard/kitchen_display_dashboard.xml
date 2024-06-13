@@ -9,7 +9,7 @@
                             <div class = "card me-3">
                                 <div class="card-header text-center">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="calc_time_offset(ticket.time)"/></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
@@ -42,7 +42,7 @@
                             <div class = "card me-3">
                                 <div class="card-header text-center">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="calc_time_offset(ticket.time)"/></h6>
                                     <t t-if="this.checkLinesStatus(ticket.id)">
                                         <a href="#" class="stretched-link" t-on-click="() => this.updateTicketStatus(ticket.id)"/>
                                     </t>
@@ -78,7 +78,7 @@
                             <div class = "card me-3 bg-primary">
                                 <div class="card-header text-center text-white">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="calc_time_offset(ticket.time)"/></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
@@ -110,7 +110,7 @@
                             <div class = "card me-3 bg-danger">
                                 <div class="card-header text-center text-white">
                                     <h5 class="card-title">Table: <t t-esc="ticket.table"/></h5>
-                                    <h6 class="card-subtitle"><t t-esc="ticket.time"/></h6>
+                                    <h6 class="card-subtitle"><t t-esc="calc_time_offset(ticket.time)"/></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
