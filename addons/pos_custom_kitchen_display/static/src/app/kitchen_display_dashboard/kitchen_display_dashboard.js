@@ -132,6 +132,7 @@ export class KitchenDisplayDashboard extends Component {
     }
 
     calc_time_offset(time){
+        // en-GB required so that time is presented in 24Hour format
         return new Date(Date.parse(time) - this.timeoffset * 60000).toLocaleTimeString("en-GB", {
             hour: '2-digit',
             minute:'2-digit'
