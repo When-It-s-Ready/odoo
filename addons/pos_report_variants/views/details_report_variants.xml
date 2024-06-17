@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="details_report_variants" model="ir.actions.report">
+        <field name="name">Report with Variants</field>
+        <field name="model">pos.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pos_report_variants.report_variantsdetails</field>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_session"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>

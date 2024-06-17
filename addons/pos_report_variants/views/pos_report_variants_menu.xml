@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_report_variants"
+        name="Session Report with Variants"
+        action="pos_report_variants.action_report_pos_reports_variants"
+        parent="point_of_sale.menu_point_rep"
+        />
+
+</odoo>
