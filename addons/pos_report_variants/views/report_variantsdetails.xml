@@ -48,15 +48,10 @@
                                     </t>
                                 </td>
                                 <tr t-foreach="category['products']" t-as="line">
-                                    <td/>
-                                    <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
-                                    <td><span t-out="internal_reference">Ref 876787</span><span t-out="line['product_name']">Laptop model x</span></td>
-                                    <td/>
-                                    <td/>
-                                    <td/>
                                     <tr t-foreach="line['variants']" t-as="variant">
                                         <td/>
-                                        <td/>
+                                        <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
+                                        <td><span t-out="internal_reference">Ref 876787</span><span t-out="line['product_name']">Laptop model x</span></td>
                                         <td><span t-out="variant['name']">variant x</span></td>
                                         <td class="text-end">
                                             <span t-out="variant['quantity']">5</span>

@@ -143,7 +143,6 @@ class ReportVariantsDetails(models.AbstractModel):
         key3 = (variant, line.price_unit, line.discount)
         keys1 = []
         for cat in line.product_id.product_tmpl_id.pos_categ_ids:
-            print(cat, cat.toReport)
             if cat.toReport == True:
                 keys1.append(cat.name)
         if keys1 == []:
